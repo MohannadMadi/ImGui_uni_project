@@ -55,8 +55,10 @@ public:
         float* gradesOfStudent,
         float scoreOfStudent,
         int *fullySubmitted
-
+        ,int* current_Student_index
+        
         ) ;
+
     ///////////////////////////Calculate GPA///////////////////////////
     void calculateGPA() ;
 
@@ -116,7 +118,8 @@ public:
         float* gradesOfStudent,
         float scoreOfStudent,
         int *fullySubmitted
-
+       , int* current_Student_index
+        
     )override ;
     ///////////////////////////Print student's data ///////////////////////////
     void getStudentInfo() override;

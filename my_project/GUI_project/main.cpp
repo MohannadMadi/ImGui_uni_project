@@ -79,7 +79,7 @@ int main(int, char**)
     // Our state
     
     bool show_start_window = true;
-    bool show_registeration_window = false;
+    bool show_registration_window = false;
     
 
 
@@ -94,7 +94,7 @@ int main(int, char**)
         int n_students = 0;
         int n_courses = 0;
         int n_CPG_students = 0;
-
+        int current_student_index = 0;
         CStudent* students = new CStudent[10000];
         CCourse* courses = new CCourse[10000];
         CPG_Student* gradStudents = new CPG_Student[10000];
@@ -140,11 +140,10 @@ int main(int, char**)
         ImGui_ImplWin32_NewFrame();
         ImGui::NewFrame();
 
-
         if (show_start_window)
         {
             ImGui::SetNextWindowSize(ImVec2(400, 200));
-            if (ImGui::Begin("Student registeration form", NULL) )
+            if (ImGui::Begin("Student registration formc", NULL))
             {
                 ImGui::Text("Enter number of students");
                 ImGui::InputInt("##numberOfStudents", &n_students);
@@ -154,29 +153,39 @@ int main(int, char**)
 
                 ImGui::Text("Enter number of courses");
                 ImGui::InputInt("##numberOfcourses", &n_courses);
-                if (ImGui::Button("register") && n_students>0)
+                if (ImGui::Button("Register ") && n_students > 0)
                 {
-                    show_registeration_window = true;
+                    show_registration_window = true;
                     show_start_window = false;
                 }
-            }ImGui::End();
-
+            }
+            ImGui::End();
         }
-        if (show_registeration_window)
-        {
-            ImGui::SetNextWindowSize(ImVec2(500, 600));
-            if (ImGui::Begin("Fill in student info"))
-            {
-                for (int i = 0;  i < n_students; i++)
-                {
-                    ImGui::Text("Student %d info  ", (i + 1));
-                    students[i].registerStudent(nameOfStudent, emailUserOfStudent , emailPassOfStudent, &idOfStudent, majorOfStudent, gradesOfStudent, scoreOfStudent,&fullySubmitted);
 
+        if (show_registration_window)
+        {
+            
+            if (n_students > 0 && current_student_index < n_students)
+            {
+                char windowName[32];
+                snprintf(windowName, sizeof(windowName), "Fill in student %d info", (current_student_index+1));
+
+                ImGui::SetNextWindowSize(ImVec2(500, 600));
+                if (ImGui::Begin(windowName))
+                {
+                    ImGui::Text("Student %d info ", (current_student_index+1));
+                    students[current_student_index].registerStudent(nameOfStudent, emailUserOfStudent, emailPassOfStudent, &idOfStudent, majorOfStudent, gradesOfStudent, scoreOfStudent, &fullySubmitted,&current_student_index);
+                    ImGui::Text("%d", current_student_index);
+                    if (n_students == 0)
+                    {
+                        show_registration_window = false;
+                    }
                 }
+                ImGui::End();
+            }
                 
 
-            }ImGui::End();
-
+            
         }
 
         // Rendering

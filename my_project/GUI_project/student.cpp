@@ -85,6 +85,7 @@ using namespace std;
     float* gradesOfStudent, 
     float scoreOfStudent ,
     int *fullySubmitted
+    ,int* current_Student_index
 
 
     ) {
@@ -117,7 +118,8 @@ using namespace std;
             if(strlen(nameOfStudent)>0 && strlen(majorOfStudent)> 0,idOfStudent>0 && strlen(emailUserOfStudent)> 0 && strlen(emailPassOfStudent)> 0)
             {
                *fullySubmitted = 1;
-               
+               *current_Student_index+=1;
+
                CStudent::setStudentID(*idOfStudent);
                CStudent::setStudentName(nameOfStudent);
                CStudent::setStudentEmailPassword(emailPassOfStudent);
@@ -126,6 +128,13 @@ using namespace std;
                CStudent::setStudentMajor(majorOfStudent);
                CStudent::calculateGPA();
 
+               strcpy(nameOfStudent, "\0");
+               strcpy(emailUserOfStudent, "\0");
+               strcpy(emailPassOfStudent, "\0");
+               *idOfStudent = 0;
+               strcpy(majorOfStudent, "\0");
+               memset(gradesOfStudent, 0, sizeof(float) * 5);
+               scoreOfStudent = 0;
             }
             else
             {
@@ -255,9 +264,10 @@ CCourse::CCourse():
         char* majorOfStudent,
         float* gradesOfStudent,
         float scoreOfStudent,
-        int *fullySubmitted
-
-    ) {
+        int *fullySubmitted,
+        int* current_Student_index)
+        
+     {
         CStudent::registerStudent(nameOfStudent,
             emailUserOfStudent,
             emailPassOfStudent,
@@ -265,8 +275,9 @@ CCourse::CCourse():
             majorOfStudent,
             gradesOfStudent,
             scoreOfStudent,
-            fullySubmitted
-
+            fullySubmitted,
+            current_Student_index
+            
             );
         cout<<"Enter student job title: ";
         char *gSjobTitle=(char *) malloc(sizeof(pg_student_job_title));
