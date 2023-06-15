@@ -18,18 +18,18 @@ public:
     ///////////////////////////Constructor///////////////////////////
     CStudent();
     ///////////////////////////Setter functions///////////////////////////
-    void setStudentName(char* ) ;
+    virtual void setStudentName(char* ) ;
 
-    void setStudentID(int ) ;
-    void setStudentEmailUsername(const char* ) ;
+    virtual void setStudentID(int ) ;
+    virtual void setStudentEmailUsername(const char* ) ;
 
-    void setStudentMajor(const char* ) ;
+    virtual void setStudentMajor(const char* ) ;
 
-    void setStudentGrades(const float*);
+    virtual void setStudentGrades(const float*);
 
-    void setStudentScore(float ) ;
+    virtual void setStudentScore(float ) ;
 
-    void setStudentEmailPassword(const char*);
+    virtual void setStudentEmailPassword(const char*);
 
     ///////////////////////////Getter functions///////////////////////////
     const char* getStudentName() const ;
@@ -56,7 +56,7 @@ public:
         float scoreOfStudent,
         int *fullySubmitted
         ,int* current_Student_index
-        
+        , char* gSjobTitle
         ) ;
 
     ///////////////////////////Calculate GPA///////////////////////////
@@ -107,6 +107,14 @@ public:
     ///////////////////////////Setter function///////////////////////////
     void setPGStudentJobTitle(const char*);
 
+    void setStudentName(char*)override;
+    void setStudentID(int)override;
+    void setStudentEmailUsername(const char*)override;
+    void setStudentMajor(const char*)override;
+    void setStudentGrades(const float*)override;
+    void setStudentScore(float)override;
+    void setStudentEmailPassword(const char*)override;
+
     ///////////////////////////Getter function///////////////////////////
     const char* getPGStudentJobTitle() const;
     ///////////////////////////Registration functions///////////////////////////
@@ -118,9 +126,10 @@ public:
         float* gradesOfStudent,
         float scoreOfStudent,
         int *fullySubmitted
-       , int* current_Student_index
+       , int* current_Student_index, char* gSjobTitle
         
     )override ;
+
     ///////////////////////////Print student's data ///////////////////////////
     void getStudentInfo() override;
 

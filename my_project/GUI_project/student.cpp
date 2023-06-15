@@ -85,7 +85,7 @@ using namespace std;
     float* gradesOfStudent, 
     float scoreOfStudent ,
     int *fullySubmitted
-    ,int* current_Student_index
+    ,int* current_Student_index, char* gSjobTitle
 
 
     ) {
@@ -254,6 +254,37 @@ CCourse::CCourse():
     strncpy(pg_student_job_title, jobTitle, 20);
     pg_student_job_title[20] = '\0'; // Ensure null-termination
     }
+
+    void CPG_Student::setStudentName(char* name) {
+        CStudent::setStudentName(name);
+    }
+
+    void CPG_Student::setStudentID(int *ID) {
+        CPG_Student::setStudentID(ID);
+    }
+
+    void CPG_Student::setStudentEmailUsername(const char* username) {
+        CStudent::setStudentEmailUsername(username);
+    }
+
+    void CPG_Student::setStudentMajor(const char* major) {
+        CStudent::setStudentMajor(major);
+    }
+
+    void CPG_Student::setStudentGrades(const float* grades) {
+        CStudent::setStudentGrades(grades);
+    }
+
+    void CPG_Student::setStudentScore(float score) {
+        setStudentScore(score);
+    }
+
+    void CPG_Student::setStudentEmailPassword(const char* password) {
+        CStudent::setStudentEmailPassword(password);
+    }
+
+
+    /// ///////////////////////////////////////////////////////////////////////
     const char *CPG_Student::getPGStudentJobTitle()const{
         return pg_student_job_title;
     }
@@ -265,23 +296,75 @@ CCourse::CCourse():
         float* gradesOfStudent,
         float scoreOfStudent,
         int *fullySubmitted,
-        int* current_Student_index)
+        int* current_Student_index, char* gSjobTitle)
         
      {
-        CStudent::registerStudent(nameOfStudent,
-            emailUserOfStudent,
-            emailPassOfStudent,
-            idOfStudent,
-            majorOfStudent,
-            gradesOfStudent,
-            scoreOfStudent,
-            fullySubmitted,
-            current_Student_index
-            
-            );
-        cout<<"Enter student job title: ";
-        char *gSjobTitle=(char *) malloc(sizeof(pg_student_job_title));
-        cin>> gSjobTitle;
+
+        ImGui::Text("Student name");
+        ImGui::InputText("##studentName", nameOfStudent, 49);
+
+        ImGui::Text("Student ID");
+        ImGui::InputInt("##studentID", idOfStudent, sizeof(idOfStudent));
+
+        ImGui::Text("Student major");
+        ImGui::InputText("##studentMajor", majorOfStudent, 9);
+
+        ImGui::Text("Student job title");
+        ImGui::InputText("##studentJobTitle", gSjobTitle, 19);
+
+        ImGui::Text("Student email username");
+        ImGui::InputText("##studentUserName", emailUserOfStudent, 9);
+
+        ImGui::Text("Student email password");
+        ImGui::InputText("##studentpassword", emailPassOfStudent, 9);
+
+        ImGui::Text("Student grades");
+        ImGui::InputFloat("##studentGrade1", &gradesOfStudent[0], 1);
+        ImGui::InputFloat("##studentGrade2", &gradesOfStudent[1], 1);
+        ImGui::InputFloat("##studentGrade3", &gradesOfStudent[2], 1);
+        ImGui::InputFloat("##studentGrade4", &gradesOfStudent[3], 1);
+        ImGui::InputFloat("##studentGrade5", &gradesOfStudent[4], 1);
+
+        if (ImGui::Button("Submit"))
+        {
+            if (strlen(nameOfStudent) > 0 && strlen(majorOfStudent) > 0, idOfStudent > 0 && strlen(emailUserOfStudent) > 0 && strlen(emailPassOfStudent) > 0)
+            {
+                *fullySubmitted = 1;
+                *current_Student_index += 1;
+
+                CPG_Student::setStudentID(*idOfStudent);
+                CPG_Student::setStudentName(nameOfStudent);
+                CPG_Student::setStudentEmailPassword(emailPassOfStudent);
+                CPG_Student::setStudentEmailUsername(emailUserOfStudent);
+                CPG_Student::setStudentGrades(gradesOfStudent);
+                CPG_Student::setStudentMajor(majorOfStudent);
+                CPG_Student::calculateGPA();
+
+                strcpy(nameOfStudent, "\0");
+                strcpy(emailUserOfStudent, "\0");
+                strcpy(emailPassOfStudent, "\0");
+                *idOfStudent = 0;
+                strcpy(majorOfStudent, "\0");
+                memset(gradesOfStudent, 0, sizeof(float) * 5);
+                scoreOfStudent = 0;
+                strcpy(gSjobTitle, "\0");
+
+            }
+            else
+            {
+                *fullySubmitted = 0;
+            }
+        }
+        if (*fullySubmitted == 0)
+        {
+            ImGui::Text("pleaase fill in all required info");
+        }
+        else
+        {
+
+        }
+
+
         setPGStudentJobTitle(gSjobTitle);
     }
     void CPG_Student::getStudentInfo() {

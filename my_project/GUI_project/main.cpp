@@ -79,8 +79,10 @@ int main(int, char**)
     // Our state
     
     bool show_start_window = true;
-    bool show_registration_window = false;
-    
+    bool show_student_registration_window = false;
+    bool show_CPG_student_registration_window = false;
+    bool show_Course_registration_window = false;
+
 
 
     ImVec4 clear_color = ImColor(30,30,30);
@@ -95,6 +97,7 @@ int main(int, char**)
         int n_courses = 0;
         int n_CPG_students = 0;
         int current_student_index = 0;
+        int current_CPG_student_index = 0;
         CStudent* students = new CStudent[10000];
         CCourse* courses = new CCourse[10000];
         CPG_Student* gradStudents = new CPG_Student[10000];
@@ -108,7 +111,9 @@ int main(int, char**)
         float gradesOfStudent[5]= { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
         float scoreOfStudent = 0;
         int fullySubmitted = 1;
-
+        //CPG
+        char gSjobTitle[100] = "\0";
+        
     // Main loop
     bool done = false;
     while (!done)
@@ -143,7 +148,7 @@ int main(int, char**)
         if (show_start_window)
         {
             ImGui::SetNextWindowSize(ImVec2(400, 200));
-            if (ImGui::Begin("Student registration formc", NULL))
+            if (ImGui::Begin("Student registration form ", NULL))
             {
                 ImGui::Text("Enter number of students");
                 ImGui::InputInt("##numberOfStudents", &n_students);
@@ -153,40 +158,85 @@ int main(int, char**)
 
                 ImGui::Text("Enter number of courses");
                 ImGui::InputInt("##numberOfcourses", &n_courses);
-                if (ImGui::Button("Register ") && n_students > 0)
+                if (ImGui::Button("Register "))
                 {
-                    show_registration_window = true;
-                    show_start_window = false;
+                    if ( n_students > 0)
+                    {
+                        show_student_registration_window = true;
+                        show_start_window = false;
+                    }
+                    else if (n_CPG_students > 0)
+                    {
+                        show_CPG_student_registration_window = true;
+                        show_start_window = false;
+                    }
+                    else if (n_courses > 0)
+                    {
+                        show_Course_registration_window = true;
+                        show_start_window = false;
+                    }
+                    else
+                    {
+                        ImGui::Text("Nothing to register");
+                    }
                 }
+                
             }
             ImGui::End();
         }
-
-        if (show_registration_window)
+        
+        //////////
+        if (show_student_registration_window)
         {
-            
+
             if (n_students > 0 && current_student_index < n_students)
             {
-                char windowName[32];
-                snprintf(windowName, sizeof(windowName), "Fill in student %d info", (current_student_index+1));
+                char StudentWindowName[32];
+                snprintf(StudentWindowName, sizeof(StudentWindowName), "Fill in student %d info", (current_student_index + 1));
 
                 ImGui::SetNextWindowSize(ImVec2(500, 600));
-                if (ImGui::Begin(windowName))
+                if (ImGui::Begin(StudentWindowName))
                 {
-                    ImGui::Text("Student %d info ", (current_student_index+1));
-                    students[current_student_index].registerStudent(nameOfStudent, emailUserOfStudent, emailPassOfStudent, &idOfStudent, majorOfStudent, gradesOfStudent, scoreOfStudent, &fullySubmitted,&current_student_index);
+                    ImGui::Text("Student %d info ", (current_student_index + 1));
+                    students[current_student_index].registerStudent(nameOfStudent, emailUserOfStudent, emailPassOfStudent, &idOfStudent, majorOfStudent, gradesOfStudent, scoreOfStudent, &fullySubmitted, &current_student_index, gSjobTitle);
                     ImGui::Text("%d", current_student_index);
-                    if (n_students == 0)
-                    {
-                        show_registration_window = false;
-                    }
                 }
                 ImGui::End();
+            }
+            else
+            {
+                show_student_registration_window = false;
+                show_CPG_student_registration_window = true;
+            }
+        }
+
+
+            /////////
+            if (show_CPG_student_registration_window)
+            {
+                if (n_CPG_students>0 && current_CPG_student_index < n_CPG_students)
+                {
+
+                    char CPG_StudentWindowName[32];
+                    snprintf(CPG_StudentWindowName, sizeof(CPG_StudentWindowName), "Fill in grad student %d info", (current_CPG_student_index + 1));
+
+                    ImGui::SetNextWindowSize(ImVec2(500, 600));
+                    if (ImGui::Begin(CPG_StudentWindowName))
+                    {
+                        ImGui::Text("Student %d info ", (current_CPG_student_index + 1));
+                        gradStudents[current_CPG_student_index].registerStudent(nameOfStudent, emailUserOfStudent, emailPassOfStudent, &idOfStudent, majorOfStudent, gradesOfStudent, scoreOfStudent, &fullySubmitted, &current_CPG_student_index,gSjobTitle);
+                        ImGui::Text("%d  ", current_CPG_student_index);
+
+
+                    }
+                    ImGui::End();
+                    
+                }
             }
                 
 
             
-        }
+        
 
         // Rendering
         ImGui::Render();
