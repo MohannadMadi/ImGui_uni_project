@@ -217,20 +217,47 @@ CCourse::CCourse():
 
 
     ///////////////////////////Adding Courses function///////////////////////////
-    void CCourse::registerCourses()
+    void CCourse::registerCourses(char* nameOfCourse,char* codeOfCourse,float *costOfCourse, int* fullySubmitted,int* current_course_index)
     {
-        char *nameOfCourse=(char *) malloc(sizeof(course_name));
-        char *codeOfCourse=(char *) malloc(sizeof(course_code));
-        float costOfCourse;
-        cout<<"\nEnter name of course: ";
-        cin>>nameOfCourse;
-        cout<<"\nEnter code of course: ";
-        cin>>codeOfCourse;
-        cout<<"\nEnter cost of course: ";
-        cin>>costOfCourse;
-        setCourseName(nameOfCourse);
-        setCourseCode(codeOfCourse);
-        setCourseCost(costOfCourse);
+        ImGui::Text("Course name");
+        ImGui::InputText("##courseName", nameOfCourse, sizeof(course_name));
+
+        ImGui::Text("Course code");
+        ImGui::InputText("##courseCode", codeOfCourse, sizeof(course_code));
+
+        ImGui::Text("Course cost");
+        ImGui::InputFloat("##courseCost", costOfCourse);
+
+
+        if (ImGui::Button("Submit"))
+        {
+            if (strlen(nameOfCourse) > 0 && strlen(codeOfCourse) > 0 , costOfCourse> 0 )
+            {
+                *fullySubmitted = 1;
+                *current_course_index += 1;
+
+                setCourseName(nameOfCourse);
+                setCourseCode(codeOfCourse);
+                setCourseCost(*costOfCourse);
+
+
+                strcpy(nameOfCourse, "\0");
+                strcpy(codeOfCourse, "\0");
+                *costOfCourse= 0;
+            }
+            else
+            {
+                *fullySubmitted = 0;
+            }
+        }
+        if (*fullySubmitted == 0)
+        {
+            ImGui::Text("pleaase fill in all required info");
+        }
+        else
+        {
+
+        }
 
 
         
@@ -259,8 +286,8 @@ CCourse::CCourse():
         CStudent::setStudentName(name);
     }
 
-    void CPG_Student::setStudentID(int *ID) {
-        CPG_Student::setStudentID(ID);
+    void CPG_Student::setStudentID(int ID) {
+        CStudent::setStudentID(ID);
     }
 
     void CPG_Student::setStudentEmailUsername(const char* username) {
@@ -276,7 +303,7 @@ CCourse::CCourse():
     }
 
     void CPG_Student::setStudentScore(float score) {
-        setStudentScore(score);
+        CStudent::setStudentScore(score);
     }
 
     void CPG_Student::setStudentEmailPassword(const char* password) {
@@ -299,7 +326,6 @@ CCourse::CCourse():
         int* current_Student_index, char* gSjobTitle)
         
      {
-
         ImGui::Text("Student name");
         ImGui::InputText("##studentName", nameOfStudent, 49);
 
@@ -310,7 +336,7 @@ CCourse::CCourse():
         ImGui::InputText("##studentMajor", majorOfStudent, 9);
 
         ImGui::Text("Student job title");
-        ImGui::InputText("##studentJobTitle", gSjobTitle, 19);
+        ImGui::InputText("##studentJobTitle", gSjobTitle, 9);
 
         ImGui::Text("Student email username");
         ImGui::InputText("##studentUserName", emailUserOfStudent, 9);
@@ -324,31 +350,31 @@ CCourse::CCourse():
         ImGui::InputFloat("##studentGrade3", &gradesOfStudent[2], 1);
         ImGui::InputFloat("##studentGrade4", &gradesOfStudent[3], 1);
         ImGui::InputFloat("##studentGrade5", &gradesOfStudent[4], 1);
+        ImGui::Text("%d", getStudentID());
 
         if (ImGui::Button("Submit"))
         {
-            if (strlen(nameOfStudent) > 0 && strlen(majorOfStudent) > 0, idOfStudent > 0 && strlen(emailUserOfStudent) > 0 && strlen(emailPassOfStudent) > 0)
+            if (strlen(nameOfStudent) > 0 && strlen(majorOfStudent) > 0 && strlen(gSjobTitle) > 0, idOfStudent > 0 && strlen(emailUserOfStudent) > 0 && strlen(emailPassOfStudent) > 0)
             {
                 *fullySubmitted = 1;
-                *current_Student_index += 1;
-
-                CPG_Student::setStudentID(*idOfStudent);
-                CPG_Student::setStudentName(nameOfStudent);
-                CPG_Student::setStudentEmailPassword(emailPassOfStudent);
-                CPG_Student::setStudentEmailUsername(emailUserOfStudent);
-                CPG_Student::setStudentGrades(gradesOfStudent);
-                CPG_Student::setStudentMajor(majorOfStudent);
-                CPG_Student::calculateGPA();
+                *current_Student_index += 1 ;
+                CPG_Student::setPGStudentJobTitle(gSjobTitle);
+                CStudent::setStudentID(*idOfStudent);
+                CStudent::setStudentName(nameOfStudent);
+                CStudent::setStudentEmailPassword(emailPassOfStudent);
+                CStudent::setStudentEmailUsername(emailUserOfStudent);
+                CStudent::setStudentGrades(gradesOfStudent);
+                CStudent::setStudentMajor(majorOfStudent);
+                CStudent::calculateGPA();
 
                 strcpy(nameOfStudent, "\0");
                 strcpy(emailUserOfStudent, "\0");
                 strcpy(emailPassOfStudent, "\0");
+                strcpy(gSjobTitle, "\0");
                 *idOfStudent = 0;
                 strcpy(majorOfStudent, "\0");
                 memset(gradesOfStudent, 0, sizeof(float) * 5);
                 scoreOfStudent = 0;
-                strcpy(gSjobTitle, "\0");
-
             }
             else
             {
@@ -364,8 +390,6 @@ CCourse::CCourse():
 
         }
 
-
-        setPGStudentJobTitle(gSjobTitle);
     }
     void CPG_Student::getStudentInfo() {
         CStudent::getStudentInfo();

@@ -91,7 +91,7 @@ public:
 
 
     ///////////////////////////Adding Courses function///////////////////////////
-    void registerCourses();
+    void registerCourses(char* nameOfCourse, char* codeOfCourse, float* costOfCourse, int* fullySubmitted,int* current_course_index);
     ///////////////////////////Get Course information function///////////////////
     void getCourseInfo() const;
  

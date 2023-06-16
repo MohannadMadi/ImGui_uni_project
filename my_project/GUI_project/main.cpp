@@ -98,9 +98,10 @@ int main(int, char**)
         int n_CPG_students = 0;
         int current_student_index = 0;
         int current_CPG_student_index = 0;
+        int current_course_index = 0;
         CStudent* students = new CStudent[10000];
         CCourse* courses = new CCourse[10000];
-        CPG_Student* gradStudents = new CPG_Student[10000];
+        CPG_Student gradStudents[22] = {};
 
 
         char nameOfStudent[100] = "\0";
@@ -113,7 +114,10 @@ int main(int, char**)
         int fullySubmitted = 1;
         //CPG
         char gSjobTitle[100] = "\0";
-        
+        //C_Course
+        char nameOfCourse[100]="\0";
+        char codeOfCourse[100]="\0";
+        float costOfCourse = 0;
     // Main loop
     bool done = false;
     while (!done)
@@ -153,7 +157,7 @@ int main(int, char**)
                 ImGui::Text("Enter number of students");
                 ImGui::InputInt("##numberOfStudents", &n_students);
 
-                ImGui::Text("Enter number of grad students");
+                ImGui::Text("Enter number of grad students ");
                 ImGui::InputInt("##numberOfGradStudents", &n_CPG_students);
 
                 ImGui::Text("Enter number of courses");
@@ -177,7 +181,7 @@ int main(int, char**)
                     }
                     else
                     {
-                        ImGui::Text("Nothing to register");
+                        ImGui::Text("Nothing to register  ");
                     }
                 }
                 
@@ -185,21 +189,19 @@ int main(int, char**)
             ImGui::End();
         }
         
-        //////////
+        //Register students
         if (show_student_registration_window)
         {
 
             if (n_students > 0 && current_student_index < n_students)
             {
-                char StudentWindowName[32];
-                snprintf(StudentWindowName, sizeof(StudentWindowName), "Fill in student %d info", (current_student_index + 1));
 
                 ImGui::SetNextWindowSize(ImVec2(500, 600));
-                if (ImGui::Begin(StudentWindowName))
+                if (ImGui::Begin("Fill in students info"))
                 {
-                    ImGui::Text("Student %d info ", (current_student_index + 1));
+                    ImGui::Text("Student %d info  ", (current_student_index + 1));
                     students[current_student_index].registerStudent(nameOfStudent, emailUserOfStudent, emailPassOfStudent, &idOfStudent, majorOfStudent, gradesOfStudent, scoreOfStudent, &fullySubmitted, &current_student_index, gSjobTitle);
-                    ImGui::Text("%d", current_student_index);
+                    ImGui::Text("%d ", current_student_index);
                 }
                 ImGui::End();
             }
@@ -211,29 +213,46 @@ int main(int, char**)
         }
 
 
-            /////////
+            //Register grad students
             if (show_CPG_student_registration_window)
             {
                 if (n_CPG_students>0 && current_CPG_student_index < n_CPG_students)
                 {
-
-                    char CPG_StudentWindowName[32];
-                    snprintf(CPG_StudentWindowName, sizeof(CPG_StudentWindowName), "Fill in grad student %d info", (current_CPG_student_index + 1));
-
                     ImGui::SetNextWindowSize(ImVec2(500, 600));
-                    if (ImGui::Begin(CPG_StudentWindowName))
+                    if (ImGui::Begin("Fill in grad students info "))
                     {
                         ImGui::Text("Student %d info ", (current_CPG_student_index + 1));
-                        gradStudents[current_CPG_student_index].registerStudent(nameOfStudent, emailUserOfStudent, emailPassOfStudent, &idOfStudent, majorOfStudent, gradesOfStudent, scoreOfStudent, &fullySubmitted, &current_CPG_student_index,gSjobTitle);
-                        ImGui::Text("%d  ", current_CPG_student_index);
-
-
+                        gradStudents[current_CPG_student_index].registerStudent(nameOfStudent, emailUserOfStudent, emailPassOfStudent, &idOfStudent, majorOfStudent, gradesOfStudent, scoreOfStudent, &fullySubmitted, &current_CPG_student_index, gSjobTitle);
                     }
                     ImGui::End();
                     
                 }
+                else
+                {
+
+                    show_CPG_student_registration_window = false;
+                    show_Course_registration_window = true;
+                }
             }
-                
+            //Register courses                
+            if (show_Course_registration_window)
+            {
+                if (n_courses > 0 && current_course_index < n_courses)
+                {
+                    ImGui::SetNextWindowSize(ImVec2(500, 600));
+                    if (ImGui::Begin("Fill in course info "))
+                    {
+                        ImGui::Text("course %d info ", (current_course_index + 1));
+                        courses[current_course_index].registerCourses(nameOfCourse, codeOfCourse, &costOfCourse, &fullySubmitted,&current_course_index);
+                    }
+                    ImGui::End();
+
+                }
+                else
+                {
+                    show_Course_registration_window = false;
+                }
+            }
 
             
         
